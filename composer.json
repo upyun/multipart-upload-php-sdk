@@ -1,0 +1,14 @@
+{
+    "name": "crocodile/php-sdk",
+    "type": "library",
+    "description": "upload file by chunk",
+    "keywords": ["upload", "chunk", "file"],
+
+    "require": {
+        "php": ">=5.3.0",
+        "ext-fileinfo": "*"
+    },
+    "autoload": {
+        "psr-4": { "Crocodile\\": "Crocodile/" }
+    }
+}

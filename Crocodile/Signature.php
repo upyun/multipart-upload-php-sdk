@@ -8,6 +8,7 @@ namespace Crocodile;
  */
 class Signature {
     protected $formApiKey;
+    protected $tokenSecret;
 
     public function __construct($key = '')
     {
@@ -19,7 +20,18 @@ class Signature {
         $this->formApiKey = $key;
     }
 
-    public function createSign($data)
+    public function setTokenSecret($key)
+    {
+        $this->tokenSecret = $key;
+    }
+
+    /**
+     * 生成签名
+     * @param $data
+     * @param bool $init: 初始化上传则为 true
+     * @return bool|string
+     */
+    public function createSign($data, $init = true)
     {
         if(is_array($data)) {
             ksort($data);
@@ -27,13 +39,18 @@ class Signature {
             foreach($data as $k => $v) {
                 $string .= "$k$v";
             }
-            $string .= $this->formApiKey;
+            $string .= $init ? $this->formApiKey : $this->tokenSecret;
             $sign = md5($string);
             return $sign;
         }
         return false;
     }
 
+    /**
+     * 获取 Policy 值
+     * @param $metaData
+     * @return bool|string
+     */
     public function createPolicy($metaData)
     {
         if(is_array($metaData)) {
@@ -43,12 +60,15 @@ class Signature {
         return false;
     }
 
-    public function validateSign($data, $sign = '')
+    public function validateSign($data, $init = true)
     {
-        if(isset($data['signature'])) {
-            $sign = $data['signature'];
-            unset($data['signature']);
+        if(! isset($data['signature'])) {
+            return false;
         }
-        return $this->createSign($data) === $sign;
+
+        $sign = $data['signature'];
+        unset($data['signature']);
+
+        return $this->createSign($data, $init) === $sign;
     }
 }

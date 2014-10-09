@@ -5,12 +5,12 @@
  * @author biao.hu@upai.com
  */
 
-namespace Crocodile\util;
+namespace Crocodile\Util;
 
 
 class MultiPartPost {
 
-    public static function post($postData, $url)
+    public static function post($postData, $url, $retryTimes = 3)
     {
         $delimiter = '-------------' . uniqid();
         $data = '';
@@ -25,7 +25,7 @@ class MultiPartPost {
             } else {
                 $data .= "--" . $delimiter . "\r\n";
                 $data .= 'Content-Disposition: form-data; name="' . $name . '"';
-                $data .= "\r\n\r\n" . urlencode($content) . "\r\n";
+                $data .= "\r\n\r\n" . $content . "\r\n";
             }
         }
         $data .= "--" . $delimiter . "--";
@@ -38,7 +38,13 @@ class MultiPartPost {
         );
         curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($handle, CURLOPT_POSTFIELDS, $data);
-        $result = curl_exec($handle);
+
+        $times = 0;
+        do{
+            $result = curl_exec($handle);
+            $times++;
+        } while($result === false && $times < $retryTimes);
+
         curl_close($handle);
         return $result;
     }
