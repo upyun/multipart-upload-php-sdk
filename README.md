@@ -16,7 +16,6 @@ try {
         new \Crocodile\File("/path/to/your/file"),
         $options
     );
-    $this->assertEquals(true, $upload->isUploadSuccess());
 } catch(\Exception $e) {
     echo $e->getMessage();
 }
