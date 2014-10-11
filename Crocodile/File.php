@@ -42,16 +42,18 @@ class File {
 
     public function readBlock($currentPosition, $endPosition, $len = 8192, $data = '')
     {
-        if($currentPosition >= $endPosition) {
-            return $data;
-        }
-        if($currentPosition + $len > $endPosition) {
-            $len = $endPosition - $currentPosition;
-        }
+        while(true) {
+            if($currentPosition >= $endPosition) {
+                return $data;
+            }
+            if($currentPosition + $len > $endPosition) {
+                $len = $endPosition - $currentPosition;
+            }
 
-        fseek($this->getHandler(), $currentPosition);
-        $data .= fread($this->getHandler(), $len);
-        return $this->readBlock($currentPosition + $len, $endPosition, $len, $data);
+            fseek($this->getHandler(), $currentPosition);
+            $data .= fread($this->getHandler(), $len);
+            $currentPosition = $currentPosition + $len;
+        }
     }
 
     public function getRealPath()

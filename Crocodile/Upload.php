@@ -67,14 +67,14 @@ class Upload {
         $this->blocks = intval(ceil($file->getSize() / $this->blockSize));
 
         $result = $this->initUpload($file, $data);
-        $this->status = $result['status'];
+        $this->updateStatus($result);
 
         $times = 0;
         do {
             for($blockIndex = 0; $blockIndex < $this->blocks; $blockIndex++) {
                 if(! $this->status[$blockIndex]) {
                     $result = $this->blockUpload($blockIndex, $file, $data);
-                    $this->status = $result['status'];
+                    $this->updateStatus($result);
                 }
             }
             $times++;
@@ -114,6 +114,7 @@ class Upload {
         $this->signature->setTokenSecret($result['token_secret']);
         return $result;
     }
+
 
     /**
      * 上传单个文件块
@@ -216,5 +217,12 @@ class Upload {
         $data = $this->parseResult($result);
         curl_close($ch);
         return $data;
+    }
+
+    protected function updateStatus($result)
+    {
+        if(isset($result['status'])) {
+            $this->status = $result['status'];
+        }
     }
 }
