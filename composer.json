@@ -1,9 +1,12 @@
 {
-    "name": "crocodile/php-sdk",
+    "name": "upyun/crocodile/php-sdk",
     "type": "library",
     "description": "upload file by chunk",
     "keywords": ["upload", "chunk", "file"],
-
+    "dist":{
+        "type":"vcs",
+        "url":"https://github.com/upyun/crocodile-php-sdk.git"
+    },
     "require": {
         "php": ">=5.3.0",
         "ext-fileinfo": "*"
