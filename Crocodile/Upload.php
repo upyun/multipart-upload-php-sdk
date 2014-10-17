@@ -40,8 +40,8 @@ class Upload {
 
     public function __construct($signature)
     {
-        //default 1MB
-        $this->blockSize = 1024 * 1024 * 1024;
+        //default 5MB
+        $this->blockSize = 5 * 1024 * 1024;
         $this->signature = $signature;
     }
 
@@ -65,15 +65,14 @@ class Upload {
     public function upload(File $file, $data)
     {
         $this->blocks = intval(ceil($file->getSize() / $this->blockSize));
-
         $result = $this->initUpload($file, $data);
         $this->updateStatus($result);
 
         $times = 0;
         do {
             for($blockIndex = 0; $blockIndex < $this->blocks; $blockIndex++) {
-                if(! $this->status[$blockIndex]) {
-                    $result = $this->blockUpload($blockIndex, $file, $data);
+                if(isset($this->status[$blockIndex]) && !$this->status[$blockIndex]) {
+                    $result = $this->blockUpload($blockIndex, $file);
                     $this->updateStatus($result);
                 }
             }
@@ -81,7 +80,7 @@ class Upload {
         } while(!$this->isUploadSuccess() && $times < 3);
 
         if($this->isUploadSuccess()) {
-            $result = $this->endUpload($data);
+            $result = $this->endUpload();
             return $result;
         } else {
             throw new \Exception(sprintf("chunk upload failed! status is : [%s]", implode(',', $this->status)));
@@ -92,6 +91,7 @@ class Upload {
      * 初始化，将文件信息发送个服务器
      * @param File $file
      * @param array $data : 附加参数 必须包含路径选项 'path' => '/yourpath/file.ext'
+     *
      * @return mixed
      */
     public function initUpload(File $file, $data)

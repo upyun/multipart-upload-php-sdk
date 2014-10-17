@@ -2,7 +2,6 @@
 
 /**
  * 辅助类：利用curl进行 multipart/form-data 提交数据
- * @author biao.hu@upai.com
  */
 
 namespace Crocodile\Util;
