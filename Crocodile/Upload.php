@@ -47,6 +47,9 @@ class Upload {
 
     public function setBlockSize($size)
     {
+        if($size < 1024 * 1024) {
+            $size = 1024 * 1024;
+        }
         $this->blockSize = $size;
     }
 
