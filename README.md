@@ -57,8 +57,10 @@ mv composer.phar /usr/local/bin/composer
 ```
 
 3.项目根目录运行 `composer install`
+
 4.在项目中添加如下代码
 ```php
+//注意修改项目根目录
 include '/your/project/root/path/vendor/autoload.php'
 ```
 
