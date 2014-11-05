@@ -2,7 +2,7 @@
     "name": "upyun/crocodile/php-sdk",
     "type": "library",
     "description": "upload file by chunk",
-    "keywords": ["upload", "chunk", "file"],
+    "keywords": ["upyun", "upload", "chunk", "file"],
     "dist":{
         "type":"vcs",
         "url":"https://github.com/upyun/crocodile-php-sdk.git"

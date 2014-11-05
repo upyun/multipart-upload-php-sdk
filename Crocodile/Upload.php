@@ -1,6 +1,30 @@
 <?php
-
+/**
+ * Crocodile - UpYun分块上传 PHP-SDK
+ *
+ * MIT LICENSE
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 namespace Crocodile;
+
 use Crocodile\Util\MultiPartPost;
 
 class Upload {
@@ -29,7 +53,7 @@ class Upload {
      */
     protected $bucketName;
     /**
-     * @var array: 文件块的状态 [1,0,1] 表示共三个文件块，第0块和第2块上传成功
+     * @var array: 文件块的状态 e.g: [1,0,1] 表示共三个文件块，第1块和第3块上传成功
      */
     protected $status;
 
@@ -49,6 +73,8 @@ class Upload {
     {
         if($size < 1024 * 1024) {
             $size = 1024 * 1024;
+        } else if($size > 5 * 1024 * 1024) {
+            $size = 5 * 1024 * 1024;
         }
         $this->blockSize = $size;
     }
@@ -67,6 +93,10 @@ class Upload {
      */
     public function upload(File $file, $data)
     {
+        if(!isset($data['path'])) {
+            throw new \Exception('please set upload path');
+        }
+
         $this->blocks = intval(ceil($file->getSize() / $this->blockSize));
         $result = $this->initUpload($file, $data);
         $this->updateStatus($result);
@@ -91,7 +121,7 @@ class Upload {
     }
 
     /**
-     * 初始化，将文件信息发送个服务器
+     * 初始化，将文件信息发送给服务器
      * @param File $file
      * @param array $data : 附加参数 必须包含路径选项 'path' => '/yourpath/file.ext'
      *
@@ -222,6 +252,10 @@ class Upload {
         return $data;
     }
 
+    /**
+     * 根据上传接口返回的数据，更新文件块上传状态
+     * @param $result: 接口返回的数据
+     */
     protected function updateStatus($result)
     {
         if(isset($result['status'])) {
