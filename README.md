@@ -56,7 +56,11 @@ mv composer.phar /usr/local/bin/composer
     }
 ```
 
-3.运行 `composer install`
+3.项目根目录运行 `composer install`
+4.在项目中添加如下代码
+```php
+include '/your/project/root/path/vendor/autoload.php'
+```
 
 <a name="download zip and install"></a>
 ### 直接下载压缩包安装
