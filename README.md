@@ -1,4 +1,16 @@
 # 又拍云文件分块上传 PHP-SDK
+![build](https://travis-ci.org/upyun/multipart-upload-php-sdk.svg)
+## 目录
+- [使用说明](#instructions)
+- [安装说明](#install)
+  - [要求](#require)
+  - [通过[composer](https://getcomposer.org/)安装](#composer install)
+  - [直接下载压缩包安装](#download zip and install)
+- [示例](#usage)
+  - [上传文件](#upload)
+  - [回调验证](#validate)
+
+<a name="instructions"></a>
 ## 使用说明
 普通方式进行大文件上传时，稳定性较低，无法断点续传。
 
@@ -13,9 +25,15 @@
 该特性仅当上传相同的文件、分块大小、上传的目标路径都不变时才有效
 
 上传之前可以通过`\Crocodile\Upload::setBlockSize()`设置分块的大小。
+
+<a name="install"></a>
 ## 安装说明
+
+<a name="require"></a>
 ### 要求
   php 5.3+
+
+<a name="composer install"></a>
 ### 通过[composer](https://getcomposer.org/)安装
 1.安装composer
 ```
@@ -40,6 +58,7 @@ mv composer.phar /usr/local/bin/composer
 
 3.运行 `composer install`
 
+<a name="download zip and install"></a>
 ### 直接下载压缩包安装
 通过github直接下载最新稳定版
 
@@ -50,7 +69,11 @@ include "Crocodile/Signature.php";
 include "Crocodile/File.php";
 include "Crocodile/Util/MultiPartPost.php";
 ```
+
+<a name="usage"></a>
 ## 示例
+
+<a name="upload"></a>
 ### 上传文件
 ```php
 $formApiKey = "w3mRPyWWwG_your_form_api_key_6C5X9pac=";
@@ -71,6 +94,8 @@ try {
     echo $e->getMessage();
 }
 ```
+
+<a name="validate"></a>
 ### 回调验证
 上传文件后，可选有三种方式进行上传结果的回调通知。客户端需要对回调进行验证
 * 如果没有设置`return_url`，服务端直接同步返回json数据进行验证
