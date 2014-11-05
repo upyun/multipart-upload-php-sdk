@@ -105,6 +105,7 @@ try {
 *注意* `notify_url`和`return_url`可以同时设置
 
 三种回调验证代码如下所示:
+
 1.直接返回json数据验证
 ```php
 $formApiKey = "w3mRPyWWwG_your_form_api_key_6C5X9pac=";
