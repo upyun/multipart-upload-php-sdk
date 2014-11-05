@@ -12,17 +12,13 @@
 
 <a name="instructions"></a>
 ## 使用说明
-普通方式进行大文件上传时，稳定性较低，无法断点续传。
-
-使用该SDK进行大文件上传时，会将大文件分成各个小块，再进行上传。
-
-最大支持1024个分块，每个块不能小于1MB,不能大于5MB。
-
-当上传中断时，在`expiration`有效期內，只需继续上传剩余的块即可，实现断点续传功能。
-
+普通方式进行大文件上传时，稳定性较低，无法断点续传。使用该SDK进行大文件上传时，会将大文件分成各个小块，再进行上传。当上传中断时，在`expiration`有效期內，只需继续上传剩余的块即可，实现断点续传功能。
 (`\Crocodile\Upload::upload()`方法会自动将剩余的块上传)。
 
+*注意:*
+
 该特性仅当上传相同的文件、分块大小、上传的目标路径都不变时才有效
+最大支持1024个分块，每个块不能小于1MB,不能大于5MB。
 
 上传之前可以通过`\Crocodile\Upload::setBlockSize()`设置分块的大小。
 
@@ -43,17 +39,17 @@ mv composer.phar /usr/local/bin/composer
 
 2.在你的项目根目录下创建`composer.json`，并添加如下内容
 ```
-    {
-        "repositories": [
-            {   
-                "type": "vcs",
-                "url": "https://github.com/upyun/multipart-upload-php-sdk"
-            }   
-        ],  
-        "require":{
-            "upyun/crocodile/php-sdk":"dev-master"
+{
+    "repositories": [
+        {   
+            "type": "vcs",
+            "url": "https://github.com/upyun/multipart-upload-php-sdk"
         }   
-    }
+    ],  
+    "require":{
+        "upyun/crocodile/php-sdk":"dev-master"
+    }   
+}
 ```
 
 3.项目根目录运行 `composer install`
@@ -82,8 +78,12 @@ include "Crocodile/Util/MultiPartPost.php";
 <a name="upload"></a>
 ### 上传文件
 ```php
+use Crocodile\Signature;
+use Crocodile\Upload;
+
 $formApiKey = "w3mRPyWWwG_your_form_api_key_6C5X9pac=";
-$upload = new \Crocodile\Upload(new \Crocodile\Signature($formApiKey));
+$sign = new Signature($formApiKey)
+$upload = new Upload($sign);
 $upload->setBucketName('your_bucket_name');//上传的空间
 try {
     //其他参数参见文档: http://docs.upyun.com/api/form_api/#Policy内容详解
@@ -114,8 +114,12 @@ try {
 
 1.直接返回json数据验证
 ```php
+use Crocodile\Signature;
+use Crocodile\Upload;
+
 $formApiKey = "w3mRPyWWwG_your_form_api_key_6C5X9pac=";
-upload = new \Crocodile\Upload(new \Crocodile\Signature($formApiKey));
+$sign = new Signature($formApiKey)
+upload = new Upload($sign);
 $upload->setBucketName('your_bucket_name');//上传的空间
 try {
     //其他参数参见文档: http://docs.upyun.com/api/form_api/#Policy内容详解
@@ -139,11 +143,12 @@ try {
 ```
 2.`302`跳转到`return_url`验证
 ```php
+use Crocodile\Signature;
 /**
  * 表单API和上传时保持一致
  */
 $formApiKey = "w3mRPyWG_your_form_api_key_6C57AX9pac=";
-$sign = new \Crocodile\Signature($formApiKey);
+$sign = new Signature($formApiKey);
 if($sign->returnValidate()) {
     echo '回调签名验证成功';
 } else {
@@ -152,11 +157,12 @@ if($sign->returnValidate()) {
 ```
 3.`notify_url`异步验证
 ```php
+use Crocodile\Signature;
 /**
  * 表单API和上传时保持一致
  */
 $formApiKey = "w3mRPOHwG_your_form_api_key_6C57AX9pac=";
-$sign = new \Crocodile\Signature($formApiKey);
+$sign = new Signature($formApiKey);
 if($sign->notifyValidate()) {
     echo '回调签名验证成功';
 } else {
