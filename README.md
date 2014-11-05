@@ -4,7 +4,7 @@
 - [使用说明](#instructions)
 - [安装说明](#install)
   - [要求](#require)
-  - [通过[composer](https://getcomposer.org/)安装](#composer install)
+  - [通过composer安装](#composer install)
   - [直接下载压缩包安装](#download zip and install)
 - [示例](#usage)
   - [上传文件](#upload)
