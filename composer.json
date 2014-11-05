@@ -5,7 +5,7 @@
     "keywords": ["upyun", "upload", "chunk", "file"],
     "dist":{
         "type":"vcs",
-        "url":"https://github.com/upyun/crocodile-php-sdk.git"
+        "url":"https://github.com/upyun/multipart-upload-php-sdk"
     },
     "require": {
         "php": ">=5.3.0",

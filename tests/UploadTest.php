@@ -43,4 +43,17 @@ class UploadTest extends PHPUnit_Framework_TestCase{
         );
         $this->assertEquals(true, $upload->isUploadSuccess());
     }
+
+    public function testUploadWithJsonValidate()
+    {
+        $upload = new \Crocodile\Upload($this->sign);
+        $upload->setBucketName(getenv('UPYUN_FILE_BUCKET'));
+        $result = $upload->upload(
+            new \Crocodile\File(dirname(__FILE__) . "/assets/bar.txt"),
+            array(
+                'path' => '/test/bar.txt'
+            )
+        );
+        $this->assertEquals(true, $upload->getSignature()->syncJsonValidate($result));
+    }
 } 

@@ -84,6 +84,11 @@ class Upload {
         $this->bucketName = $bucketName;
     }
 
+    public function getSignature()
+    {
+        return $this->signature;
+    }
+
     /**
      * 分块上传本地文件
      * @param File $file: 等待上传的文件

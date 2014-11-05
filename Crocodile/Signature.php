@@ -39,10 +39,17 @@ class Signature {
      * @var string: 接口返回的 token
      */
     protected $tokenSecret;
+    /**
+     * @var array: 服务端返回的数据KEY
+     */
+    protected $paramsKey;
 
     public function __construct($formApiKey = '')
     {
         $this->setFormApiKey($formApiKey);
+        $this->paramsKey = array('path', 'content_type', 'content_length',
+                                 'image_width', 'image_height', 'image_frames',
+                                 'last_modified', 'signature');
     }
 
     public function setFormApiKey($key)
@@ -58,10 +65,10 @@ class Signature {
     /**
      * 生成签名
      * @param $data
-     * @param bool $init: 初始化上传则为 true
+     * @param bool $isFormApiKey: 签名生成方式 e.g: true 使用表单API的key生成
      * @return bool|string
      */
-    public function createSign($data, $init = true)
+    public function createSign($data, $isFormApiKey = true)
     {
         if(is_array($data)) {
             ksort($data);
@@ -69,7 +76,7 @@ class Signature {
             foreach($data as $k => $v) {
                 $string .= "$k$v";
             }
-            $string .= $init ? $this->formApiKey : $this->tokenSecret;
+            $string .= $isFormApiKey ? $this->formApiKey : $this->tokenSecret;
             $sign = md5($string);
             return $sign;
         }
@@ -93,10 +100,10 @@ class Signature {
     /**
      * 验证回调签名
      * @param $data
-     * @param bool $init
+     * @param bool $isFormApiKey
      * @return bool
      */
-    public function validateSign($data, $init = true)
+    protected function validateSign($data, $isFormApiKey = true)
     {
         if(! isset($data['signature'])) {
             return false;
@@ -105,6 +112,45 @@ class Signature {
         $sign = $data['signature'];
         unset($data['signature']);
 
-        return $this->createSign($data, $init) === $sign;
+        return $this->createSign($data, $isFormApiKey) === $sign;
+    }
+
+    /**
+     * 客户端同步跳转回调验证
+     * @return bool
+     */
+    public function returnValidate()
+    {
+        $data = array();
+        foreach($this->paramsKey as $key) {
+            if(isset($_GET[$key])) {
+                $data[$key] = $_GET[$key];
+            }
+        }
+        return $this->validateSign($data);
+    }
+    /**
+     * 异步通知回调验证
+     * @return bool
+     */
+    public function notifyValidate()
+    {
+        $data = array();
+        foreach($this->paramsKey as $key) {
+            if(isset($_POST[$key])) {
+                $data[$key] = $_GET[$key];
+            }
+        }
+        return $this->validateSign($data);
+    }
+
+    /**
+     * 服务端直接返回 json验证
+     * @param $data: 服务端返回的待验证数据
+     * @return bool
+     */
+    public function syncJsonValidate($data)
+    {
+        return $this->validateSign($data, false);
     }
 }
