@@ -51,7 +51,7 @@ mv composer.phar /usr/local/bin/composer
             }   
         ],  
         "require":{
-            "upyun/sugar-php-sdk":"dev-master"
+            "upyun/crocodile/php-sdk":"dev-master"
         }   
     }
 ```
