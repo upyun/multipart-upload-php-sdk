@@ -9,6 +9,9 @@
 - [示例](#usage)
   - [上传文件](#upload)
   - [回调验证](#validate)
+- [贡献代码](#contribute)
+- [社区](#community)
+- [许可证](#license)
 
 <a name="instructions"></a>
 ## 使用说明
@@ -168,3 +171,23 @@ if($sign->notifyValidate()) {
     echo '回调签名验证失败';
 }
 ```
+
+<a name="contribute"></a>
+## 贡献代码
+ 1. Fork
+ 2. 为新特性创建一个新的分支
+ 3. 发送一个 pull request 到 develop 分支
+
+<a name="community"></a>
+## 社区
+
+ - [UPYUN问答社区](http://segmentfault.com/upyun)
+ - [UPYUN微博](http://weibo.com/upaiyun)
+
+<a name="license"></a>
+## 许可证
+
+UPYUN 分块上传PHP-SDK基于 MIT 开源协议
+
+<http://www.opensource.org/licenses/MIT>
+
