@@ -79,6 +79,7 @@ include "Crocodile/Util/MultiPartPost.php";
 ### 上传文件
 ```php
 use Crocodile\Signature;
+use Crocodile\File;
 use Crocodile\Upload;
 
 $formApiKey = "w3mRPyWWwG_your_form_api_key_6C5X9pac=";
@@ -92,10 +93,8 @@ try {
        'return_url' => 'http://yourdomain.com', // 回调地址,可选
        'notify_url' => 'http://yourdomain.com', // 通知地址,可选
     )
-    $result = $upload->upload(
-        new \Crocodile\File("/path/to/your/file"),
-        $options
-    );
+    $file = new File("/path/to/your/file");
+    $result = $upload->upload($file, $options);
 } catch(\Exception $e) {
     echo $e->getMessage();
 }
