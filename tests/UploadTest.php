@@ -42,6 +42,7 @@ class UploadTest extends PHPUnit_Framework_TestCase{
             )
         );
         $this->assertEquals(true, $upload->isUploadSuccess());
+        $this->assertEquals(32, strlen($upload->getXRequestId()));
     }
 
     public function testUploadWithJsonValidate()

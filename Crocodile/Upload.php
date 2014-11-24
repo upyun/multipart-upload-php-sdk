@@ -58,6 +58,11 @@ class Upload {
     protected $status;
 
     /**
+     * @var string: UPYUN 请求唯一id, 出现错误时, 可以将该id报告给 UPYUN,进行调试
+     */
+    protected $x_request_id;
+
+    /**
      * @var Signature: 签名
      */
     protected $signature;
@@ -213,6 +218,11 @@ class Upload {
         return array_sum($this->status) === count($this->status);
     }
 
+    public function getXRequestId()
+    {
+        return $this->x_request_id;
+    }
+
     protected function parseResult($result)
     {
         $data = json_decode($result, true);
@@ -220,7 +230,7 @@ class Upload {
             throw new \Exception(
                 sprintf("upload failed, error code: %s, message: %s",
                     $data['error_code'],
-                    $data['message']
+                    $data['message'] . " X-Request-Id:" . $this->getXRequestId()
                 ));
         }
         return $data;
@@ -231,6 +241,7 @@ class Upload {
      * @param array $postData
      * @param array $headers
      * @param int $retryTimes : 重试次数
+     * @throws \Exception
      * @return mixed
      */
     protected function postData($postData, $headers = array(), $retryTimes = 3)
@@ -244,6 +255,7 @@ class Upload {
             CURLOPT_HTTPHEADER => $headers,
             CURLOPT_POSTFIELDS => http_build_query($postData),
             CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HEADER => true,
         ));
 
         $times = 0;
@@ -252,7 +264,14 @@ class Upload {
             $times++;
         } while($result === false && $times < $retryTimes);
 
-        $data = $this->parseResult($result);
+        if($result === false) {
+            throw new \Exception("curl failed");
+        }
+
+        list($headers, $body) = $this->parseHttpResponse($result);
+        $this->x_request_id = isset($headers['X-Request-Id']) ? $headers['X-Request-Id'] : '';
+
+        $data = $this->parseResult($body);
         curl_close($ch);
         return $data;
     }
@@ -266,5 +285,25 @@ class Upload {
         if(isset($result['status'])) {
             $this->status = $result['status'];
         }
+    }
+
+    private function parseHttpResponse($response) {
+        if(!$response) {
+            return false;
+        }
+
+        $response_array = explode("\r\n\r\n", $response, 2);
+        $header_string = $response_array[0];
+        $body = isset($response_array[1]) ? $response_array[1] : '';
+
+        $headers = array();
+        foreach (explode("\n", $header_string) as $header) {
+            $headerArr = explode(':', $header, 2);
+            if(isset($headerArr[1])) {
+                $key = $headerArr[0];
+                $headers[$key] = trim($headerArr[1]);
+            }
+        }
+        return array($headers, $body);
     }
 }
