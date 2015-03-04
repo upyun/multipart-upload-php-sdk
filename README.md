@@ -86,7 +86,7 @@ use Crocodile\File;
 use Crocodile\Upload;
 
 $formApiKey = "w3mRPyWWwG_your_form_api_key_6C5X9pac=";
-$sign = new Signature($formApiKey)
+$sign = new Signature($formApiKey);
 $upload = new Upload($sign);
 $upload->setBucketName('your_bucket_name');//上传的空间
 try {
@@ -95,7 +95,7 @@ try {
        'path' => '/test.png',                   // 文件在服务器保存的路径,必须
        'return_url' => 'http://yourdomain.com', // 回调地址,可选
        'notify_url' => 'http://yourdomain.com', // 通知地址,可选
-    )
+    );
     $file = new File("/path/to/your/file");
     $result = $upload->upload($file, $options);
 } catch(\Exception $e) {
@@ -120,14 +120,14 @@ use Crocodile\Signature;
 use Crocodile\Upload;
 
 $formApiKey = "w3mRPyWWwG_your_form_api_key_6C5X9pac=";
-$sign = new Signature($formApiKey)
+$sign = new Signature($formApiKey);
 upload = new Upload($sign);
 $upload->setBucketName('your_bucket_name');//上传的空间
 try {
     //其他参数参见文档: http://docs.upyun.com/api/form_api/#Policy内容详解
     $options = array(
        'path' => '/test.png',                   // 文件在服务器保存的路径,必须
-    )
+    );
     $result = $upload->upload(
         new \Crocodile\File("/path/to/your/file"),
         $options
