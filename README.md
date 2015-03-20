@@ -45,8 +45,8 @@ mv composer.phar /usr/local/bin/composer
 {
     "repositories": [
         {   
-            "type": "vcs",
-            "url": "https://github.com/upyun/multipart-upload-php-sdk"
+            "type": "git",
+            "url": "https://github.com/upyun/multipart-upload-php-sdk.git"
         }   
     ],  
     "require":{
