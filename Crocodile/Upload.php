@@ -226,11 +226,11 @@ class Upload {
     protected function parseResult($result)
     {
         $data = json_decode($result, true);
-        if(isset($data['error_code'])) {
+        if(isset($data['code'])) {
             throw new \Exception(
                 sprintf("upload failed, error code: %s, message: %s",
-                    $data['error_code'],
-                    $data['message'] . " X-Request-Id:" . $this->getXRequestId()
+                    $data['code'],
+                    $data['msg'] . " X-Request-Id:" . $data['id']
                 ));
         }
         return $data;
