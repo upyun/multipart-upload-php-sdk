@@ -1,5 +1,9 @@
-# 又拍云文件分块上传 PHP-SDK
+# 又拍云文件分块上传 PHP-SDK !!!Deprecated
+
+不推荐再使用，功能已经集成到 https://github.com/upyun/php-sdk
+
 ![build](https://travis-ci.org/upyun/multipart-upload-php-sdk.svg)
+
 ## 目录
 - [使用说明](#instructions)
 - [安装说明](#install)
